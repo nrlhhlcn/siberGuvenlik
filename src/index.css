@@ -143,6 +143,33 @@
     @apply bg-background text-foreground transition-colors duration-300;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
+
+  /* Input alanlarının her zaman tıklanabilir olması için */
+  input, textarea, select {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  /* Form elemanlarının üst katmanlarda olması için */
+form {
+  position: relative;
+  z-index: 5;
+}
+
+/* Şifre input alanının kesinlikle tıklanabilir olması için */
+#password-input {
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+
+/* Şifre input container'ının da tıklanabilir olması için */
+.relative.z-10 {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
 }
 
 @layer components {
@@ -505,4 +532,74 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-accent-glow;
+}
+
+/* Leaflet harita stilleri */
+.leaflet-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply bg-card border border-border rounded-lg shadow-lg;
+}
+
+.leaflet-popup-content {
+  @apply text-foreground;
+}
+
+.leaflet-popup-tip {
+  @apply bg-card border-border;
+}
+
+.leaflet-control-zoom a {
+  @apply bg-card border border-border text-foreground hover:bg-accent hover:text-accent-foreground;
+}
+
+.leaflet-control-attribution {
+  @apply bg-background/80 text-muted-foreground;
+}
+
+/* Slider stilleri */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  @apply bg-muted rounded-lg;
+  height: 8px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  @apply bg-accent rounded-full;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  @apply bg-accent-glow scale-110;
+}
+
+.slider::-moz-range-track {
+  @apply bg-muted rounded-lg;
+  height: 8px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  @apply bg-accent rounded-full border-0;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  @apply bg-accent-glow scale-110;
 }

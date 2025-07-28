@@ -206,6 +206,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         placeholder="Adınızı girin"
+                        className="relative z-10"
                         required
                       />
                     </div>
@@ -218,6 +219,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder="email@ornegi.com"
+                        className="relative z-10"
                         required
                       />
                     </div>
@@ -230,7 +232,7 @@ const Contact = () => {
                       name="category"
                       value={formData.category}
                       onChange={(e) => handleInputChange(e)}
-                      className="w-full p-2 border rounded-md bg-background"
+                      className="w-full p-2 border rounded-md bg-background relative z-10"
                     >
                       <option value="general">Genel Sorular</option>
                       <option value="technical">Teknik Destek</option>
@@ -248,6 +250,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleInputChange}
                       placeholder="Mesajınızın konusu"
+                      className="relative z-10"
                       required
                     />
                   </div>
@@ -260,7 +263,7 @@ const Contact = () => {
                       value={formData.message}
                       onChange={handleInputChange}
                       placeholder="Mesajınızı buraya yazın..."
-                      className="min-h-[120px]"
+                      className="min-h-[120px] relative z-10"
                       required
                     />
                   </div>

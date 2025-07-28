@@ -114,6 +114,7 @@ export const DiscussionForm = () => {
                   placeholder="Tartışma başlığını girin"
                   value={formData.title}
                   onChange={(e) => handleInputChange("title", e.target.value)}
+                  className="relative z-10"
                   required
                 />
               </div>
@@ -140,7 +141,7 @@ export const DiscussionForm = () => {
               <Textarea
                 id="content"
                 placeholder="Sorunuzu veya tartışma konunuzu detaylı bir şekilde açıklayın..."
-                className="min-h-[120px]"
+                className="min-h-[120px] relative z-10"
                 value={formData.content}
                 onChange={(e) => handleInputChange("content", e.target.value)}
                 required
@@ -154,6 +155,7 @@ export const DiscussionForm = () => {
                 placeholder="Etiketleri virgülle ayırın (örn: XSS, web security, frontend)"
                 value={formData.tags}
                 onChange={(e) => handleInputChange("tags", e.target.value)}
+                className="relative z-10"
               />
             </div>
 

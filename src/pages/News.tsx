@@ -308,7 +308,7 @@ const News = () => {
           <div className="max-w-md mx-auto flex space-x-2">
             <Input 
               placeholder="E-posta adresiniz"
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+              className="bg-white/10 border-white/20 text-white placeholder:text-white/60 relative z-10"
             />
             <Button variant="secondary">
               Abone Ol
