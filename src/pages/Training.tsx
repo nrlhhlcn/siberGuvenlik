@@ -29,7 +29,7 @@ const Training = () => {
       students: 12500,
       rating: 4.8,
       progress: 0,
-      price: "Ücretsiz",
+      price: "",
       image: "🛡️",
       topics: ["Güvenlik Temelleri", "Tehdit Türleri", "Risk Değerlendirmesi", "Güvenlik Politikaları"]
     },
@@ -42,7 +42,7 @@ const Training = () => {
       students: 8750,
       rating: 4.9,
       progress: 0,
-      price: "ÜCRETSİZ",
+      price: "",
       image: "🌐",
       topics: ["Firewall Konfigürasyonu", "VPN Kurulumu", "IDS/IPS", "Ağ Monitoring"]
     },
@@ -55,7 +55,7 @@ const Training = () => {
       students: 5200,
       rating: 4.9,
       progress: 0,
-      price: "ÜCRETSİZ",
+      price: "",
       image: "👨‍💻",
       topics: ["Penetrasyon Testleri", "Açık Araştırması", "Exploit Geliştirme", "Raporlama"]
     },
@@ -68,7 +68,7 @@ const Training = () => {
       students: 3100,
       rating: 4.7,
       progress: 0,
-      price: "ÜCRETSİZ",
+      price: "",
       image: "🚨",
       topics: ["Olay Tespiti", "Kanıt Toplama", "Sistem Kurtarma", "Yasal Süreçler"]
     }
@@ -80,21 +80,21 @@ const Training = () => {
       description: "Kapsamlı siber güvenlik bilgisi sertifikası",
       courses: 4,
       duration: "3 ay",
-      price: "ÜCRETSİZ"
+      price: ""
     },
     {
       title: "Etik Hacker Sertifikası",
       description: "Penetrasyon testleri ve güvenlik analizi",
       courses: 6,
       duration: "6 ay",
-      price: "ÜCRETSİZ"
+      price: ""
     },
     {
       title: "Ağ Güvenliği Uzmanı",
       description: "Ağ altyapısı güvenliği ve yönetimi",
       courses: 5,
       duration: "4 ay",
-      price: "ÜCRETSİZ"
+      price: ""
     }
   ];
 
@@ -213,7 +213,7 @@ const Training = () => {
 
                       <div className="flex items-center justify-between pt-4">
                         <div className="text-2xl font-bold text-accent">
-                          Ücretsiz
+                          
                         </div>
                         <Button 
                           className="btn-cyber"
@@ -275,7 +275,7 @@ const Training = () => {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Fiyat:</span>
-                            <span className="font-bold text-accent">Ücretsiz</span>
+                            <span className="font-bold text-accent"></span>
                           </div>
                         </div>
                         <Button className="btn-cyber w-full">
