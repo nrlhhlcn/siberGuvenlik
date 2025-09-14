@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Shield, Menu, X, LogIn } from "lucide-react";
+import { Moon, Sun, Shield, Menu, X, LogIn, LogOut, User as UserIcon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LoginModal } from "./LoginModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
@@ -87,15 +93,50 @@ const Header = () => {
               )}
             </Button>
 
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => setIsLoginOpen(true)}
-              className="gap-2 btn-cyber hidden md:flex"
-            >
-              <LogIn className="h-4 w-4" />
-              Giriş Yap
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 btn-matrix hidden md:flex"
+                  >
+                    <UserIcon className="h-4 w-4" />
+                    {user.displayName || user.email}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={logout} className="text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Çıkış Yap
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  asChild
+                  className="gap-2 btn-matrix"
+                >
+                  <Link to="/login">
+                    <LogIn className="h-4 w-4" />
+                    Giriş Yap
+                  </Link>
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  asChild
+                  className="gap-2 btn-cyber"
+                >
+                  <Link to="/register">
+                    Kayıt Ol
+                  </Link>
+                </Button>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -131,24 +172,50 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => {
-                  setIsLoginOpen(true);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="gap-2 btn-cyber mt-4"
-              >
-                <LogIn className="h-4 w-4" />
-                Giriş Yap
-              </Button>
+              {user ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="gap-2 btn-matrix mt-4"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Çıkış Yap
+                </Button>
+              ) : (
+                <div className="flex flex-col gap-2 mt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="gap-2 btn-matrix"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link to="/login">
+                      <LogIn className="h-4 w-4" />
+                      Giriş Yap
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    asChild
+                    className="gap-2 btn-cyber"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link to="/register">
+                      Kayıt Ol
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </div>
           </nav>
         )}
       </div>
-      
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </header>
   );
 };

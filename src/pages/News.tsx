@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   Newspaper, 
   Clock, 
@@ -8,99 +9,123 @@ import {
   ExternalLink,
   Filter,
   Search,
-  Calendar
+  Calendar,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
+import { db } from "@/firebase";
+import { getLatestNews } from "@/services/rssService";
+
+interface NewsItem {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  authorId: string;
+  authorName: string;
+  createdAt: any;
+  severity?: string;
+  readTime?: string;
+  source?: string;
+  image?: string;
+}
 
 const News = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   const newsCategories = [
-    { id: "all", name: "Tüm Haberler", count: 45 },
-    { id: "threats", name: "Tehditler", count: 12 },
-    { id: "updates", name: "Güncellemeler", count: 8 },
-    { id: "tools", name: "Araçlar", count: 7 },
-    { id: "education", name: "Eğitim", count: 6 },
-    { id: "reports", name: "Raporlar", count: 12 }
+    { id: "all", name: "Tüm Haberler", count: 0 },
+    { id: "threats", name: "Tehditler", count: 0 },
+    { id: "updates", name: "Güncellemeler", count: 0 },
+    { id: "tools", name: "Araçlar", count: 0 },
+    { id: "education", name: "Eğitim", count: 0 },
+    { id: "reports", name: "Raporlar", count: 0 }
   ];
 
-  const breakingNews = [
-    {
-      id: "1",
-      title: "Yeni Ransomware Saldırısı: LockBit 3.0 Tespit Edildi",
-      summary: "Kritik altyapıları hedef alan yeni ransomware türü tespit edildi. Uzmanlar acil güvenlik önlemleri alınmasını tavsiye ediyor.",
-      category: "threats",
-      severity: "high",
-      timeAgo: "15 dakika önce",
-      readTime: "3 dk",
-      source: "CyberGuard Security Lab",
-      image: "🚨"
-    },
-    {
-      id: "2", 
-      title: "Microsoft Kritik Güvenlik Açığını Kapattı",
-      summary: "Windows ve Office ürünlerini etkileyen zero-day açığı için acil güncelleme yayınlandı.",
-      category: "updates",
-      severity: "medium",
-      timeAgo: "2 saat önce", 
-      readTime: "2 dk",
-      source: "Microsoft Security Blog",
-      image: "🔧"
-    },
-    {
-      id: "3",
-      title: "Ücretsiz Güvenlik Tarayıcı Aracı Güncellendi",
-      summary: "Popüler açık kaynak güvenlik tarayıcısına yeni özellikler eklendi. Şimdi daha hızlı ve etkili.",
-      category: "tools",
-      severity: "low",
-      timeAgo: "4 saat önce",
-      readTime: "2 dk", 
-      source: "Open Security Community",
-      image: "🛠️"
+  // RSS feed'lerden haberleri çek
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      
+      const newsData = await getLatestNews();
+      setNews(newsData);
+      
+      // Kategori sayılarını güncelle
+      newsCategories.forEach(category => {
+        if (category.id === "all") {
+          category.count = newsData.length;
+        } else {
+          category.count = newsData.filter(item => item.category === category.id).length;
+        }
+      });
+      
+    } catch (err) {
+      console.error("Error fetching news:", err);
+      setError("Haberler yüklenirken bir hata oluştu.");
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const allNews = [
-    ...breakingNews,
-    {
-      id: "4",
-      title: "Yapay Zeka Destekli Siber Saldırılar Artışta",
-      summary: "2024 yılında AI destekli saldırıların %300 arttığı raporlandı. Uzmanlar savunma stratejilerini gözden geçirmeyi öneriyor.",
-      category: "reports", 
-      severity: "medium",
-      timeAgo: "6 saat önce",
-      readTime: "5 dk",
-      source: "Cybersecurity Research Institute",
-      image: "🤖"
-    },
-    {
-      id: "5",
-      title: "Ücretsiz Siber Güvenlik Eğitim Serisi Başlıyor",
-      summary: "Türkiye'nin en kapsamlı ücretsiz siber güvenlik eğitim programı 1 Mart'ta başlıyor. Kayıtlar açık.",
-      category: "education",
-      severity: "low", 
-      timeAgo: "8 saat önce",
-      readTime: "3 dk",
-      source: "CyberGuard Eğitim",
-      image: "📚"
-    },
-    {
-      id: "6",
-      title: "Phishing Saldırıları %250 Arttı",
-      summary: "Son 3 ayda phishing saldırılarında dramatik artış gözlemlendi. E-posta güvenliği önlemleri kritik hale geldi.",
-      category: "threats",
-      severity: "high",
-      timeAgo: "12 saat önce", 
-      readTime: "4 dk",
-      source: "Anti-Phishing Working Group",
-      image: "🎣"
+  // Manuel RSS güncelleme
+  const handleManualUpdate = async () => {
+    try {
+      setUpdating(true);
+      await fetchNews(); // Güncellenmiş haberleri çek
+    } catch (error) {
+      console.error('Error updating RSS feeds:', error);
+    } finally {
+      setUpdating(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  // Yardımcı fonksiyonlar
+  const formatTimeAgo = (timestamp: any) => {
+    if (!timestamp) return "Bilinmiyor";
+    
+    const now = new Date();
+    const newsTime = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const diffInMinutes = Math.floor((now.getTime() - newsTime.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return "Az önce";
+    if (diffInMinutes < 60) return `${diffInMinutes} dakika önce`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} saat önce`;
+    return `${Math.floor(diffInMinutes / 1440)} gün önce`;
+  };
+
+  const getReadTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(' ').length;
+    const readTime = Math.ceil(wordCount / wordsPerMinute);
+    return `${readTime} dk`;
+  };
+
+  const getCategoryEmoji = (category: string) => {
+    const emojis: { [key: string]: string } = {
+      threats: "🚨",
+      updates: "🔧", 
+      tools: "🛠️",
+      education: "📚",
+      reports: "📊"
+    };
+    return emojis[category] || "📰";
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -120,12 +145,39 @@ const News = () => {
     }
   };
 
-  const filteredNews = allNews.filter(news => {
-    const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         news.summary.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || news.category === selectedCategory;
+  const filteredNews = news.filter(newsItem => {
+    const matchesSearch = newsItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         newsItem.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || newsItem.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const breakingNews = news.filter(item => item.severity === "high").slice(0, 3);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-lg text-muted-foreground">Haberler yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <p className="text-lg text-destructive mb-4">{error}</p>
+          <Button onClick={fetchNews} className="btn-cyber">
+            Tekrar Dene
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">
@@ -181,33 +233,39 @@ const News = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {breakingNews.map((news, index) => (
-              <Card key={news.id} className="card-cyber hover-lift group border-destructive/20 animate-slide-up" style={{ animationDelay: `${index * 0.2}s` }}>
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="text-2xl animate-float">{news.image}</div>
-                    <Badge className={getSeverityColor(news.severity)}>
-                      {getSeverityText(news.severity)}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg group-hover:text-accent transition-colors line-clamp-2">
-                    {news.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="line-clamp-3 mb-4">
-                    {news.summary}
-                  </CardDescription>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-3 w-3 animate-pulse-glow" />
-                      <span>{news.timeAgo}</span>
+            {breakingNews.length > 0 ? (
+              breakingNews.map((newsItem, index) => (
+                <Card key={newsItem.id} className="card-cyber hover-lift group border-destructive/20 animate-slide-up" style={{ animationDelay: `${index * 0.2}s` }}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="text-2xl animate-float">{getCategoryEmoji(newsItem.category)}</div>
+                      <Badge className={getSeverityColor(newsItem.severity || "high")}>
+                        {getSeverityText(newsItem.severity || "high")}
+                      </Badge>
                     </div>
-                    <span>{news.readTime} okuma</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <CardTitle className="text-lg group-hover:text-accent transition-colors line-clamp-2">
+                      {newsItem.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="line-clamp-3 mb-4">
+                      {newsItem.content.substring(0, 150)}...
+                    </CardDescription>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <Clock className="h-3 w-3 animate-pulse-glow" />
+                        <span>{formatTimeAgo(newsItem.createdAt)}</span>
+                      </div>
+                      <span>{getReadTime(newsItem.content)} okuma</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">Henüz kritik haber bulunmuyor.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -227,6 +285,25 @@ const News = () => {
               />
             </div>
             <div className="flex space-x-2">
+              <Button
+                onClick={handleManualUpdate}
+                disabled={updating}
+                variant="outline"
+                size="sm"
+                className="btn-matrix"
+              >
+                {updating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Güncelleniyor...
+                  </>
+                ) : (
+                  <>
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    Haberleri Yenile
+                  </>
+                )}
+              </Button>
               {newsCategories.map((category) => (
                 <Button
                   key={category.id}
@@ -243,48 +320,78 @@ const News = () => {
 
           {/* Haber Listesi */}
           <div className="space-y-6">
-            {filteredNews.map((news) => (
-              <Card key={news.id} className="card-matrix hover-lift group">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="text-3xl flex-shrink-0">{news.image}</div>
-                    <div className="flex-1 space-y-3">
-                      <div className="flex items-start justify-between">
-                        <h3 className="text-xl font-semibold group-hover:text-accent transition-colors line-clamp-2">
-                          {news.title}
-                        </h3>
-                        <Badge className={getSeverityColor(news.severity)}>
-                          {getSeverityText(news.severity)}
-                        </Badge>
-                      </div>
-                      
-                      <p className="text-muted-foreground line-clamp-2">
-                        {news.summary}
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="h-4 w-4" />
-                            <span>{news.timeAgo}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-4 w-4" />
-                            <span>{news.readTime}</span>
-                          </div>
-                          <span className="text-accent">{news.source}</span>
+            {filteredNews.length > 0 ? (
+              filteredNews.map((newsItem) => (
+                <Card 
+                  key={newsItem.id} 
+                  className="card-matrix hover-lift group cursor-pointer"
+                  onClick={() => navigate(`/news/${newsItem.id}`)}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="text-3xl flex-shrink-0">{getCategoryEmoji(newsItem.category)}</div>
+                      <div className="flex-1 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <h3 
+                            className="text-xl font-semibold group-hover:text-accent transition-colors line-clamp-2 cursor-pointer hover:underline"
+                            onClick={() => navigate(`/news/${newsItem.id}`)}
+                          >
+                            {newsItem.title}
+                          </h3>
+                          <Badge className={getSeverityColor(newsItem.severity || "low")}>
+                            {getSeverityText(newsItem.severity || "low")}
+                          </Badge>
                         </div>
                         
-                        <Button variant="outline" size="sm" className="btn-matrix">
-                          <span>Devamını Oku</span>
-                          <ExternalLink className="ml-2 h-3 w-3" />
-                        </Button>
+                        <p className="text-muted-foreground line-clamp-2">
+                          {newsItem.content.substring(0, 200)}...
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                            <div className="flex items-center space-x-1">
+                              <Calendar className="h-4 w-4" />
+                              <span>{formatTimeAgo(newsItem.createdAt)}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{getReadTime(newsItem.content)}</span>
+                            </div>
+                            <span className="text-accent">{newsItem.authorName}</span>
+                          </div>
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="btn-matrix"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/news/${newsItem.id}`);
+                            }}
+                          >
+                            <span>Devamını Oku</span>
+                            <ExternalLink className="ml-2 h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <Newspaper className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Haber Bulunamadı</h3>
+                <p className="text-muted-foreground mb-4">
+                  {searchTerm ? "Arama kriterlerinize uygun haber bulunamadı." : "Bu kategoride henüz haber bulunmuyor."}
+                </p>
+                {searchTerm && (
+                  <Button onClick={() => setSearchTerm("")} variant="outline">
+                    Aramayı Temizle
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Yükleme Butonu */}
