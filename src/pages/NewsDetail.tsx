@@ -218,12 +218,44 @@ const NewsDetail = () => {
 
                   {/* Content */}
                   <div className="prose prose-lg max-w-none">
-                    <div 
-                      className="text-muted-foreground leading-relaxed"
-                      dangerouslySetInnerHTML={{ 
-                        __html: newsItem.content.replace(/\n/g, '<br>') 
-                      }}
-                    />
+                    <div className="text-foreground leading-relaxed space-y-4">
+                      {newsItem.content.split('\n').map((paragraph, index) => (
+                        <p key={index} className="text-base leading-7">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                    
+                    {/* Additional Information */}
+                    <div className="mt-8 p-6 bg-muted/50 rounded-lg border">
+                      <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <Shield className="h-5 w-5 mr-2" />
+                        Siber Güvenlik Analizi
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-muted-foreground">
+                            Bu haber, {newsItem.category === 'threats' ? 'aktif tehditler' : 
+                            newsItem.category === 'updates' ? 'güvenlik güncellemeleri' :
+                            newsItem.category === 'tools' ? 'güvenlik araçları' :
+                            newsItem.category === 'education' ? 'güvenlik eğitimi' : 'güvenlik raporları'} kategorisinde yer almaktadır.
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-muted-foreground">
+                            Risk seviyesi: <span className="font-medium">{getSeverityText(newsItem.severity || 'low')}</span>
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-sm text-muted-foreground">
+                            Kaynak: <span className="font-medium">{newsItem.source}</span> - Güvenilir siber güvenlik kaynağı
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* External Link */}
@@ -265,6 +297,12 @@ const NewsDetail = () => {
                       </Badge>
                     </div>
                     <div>
+                      <p className="text-sm text-muted-foreground">Risk Seviyesi</p>
+                      <Badge className={getSeverityColor(newsItem.severity || 'low')} variant="outline">
+                        {getSeverityText(newsItem.severity || 'low')}
+                      </Badge>
+                    </div>
+                    <div>
                       <p className="text-sm text-muted-foreground">Dil</p>
                       <p className="font-medium">
                         {newsItem.language === 'tr' ? 'Türkçe' : 'İngilizce'}
@@ -273,6 +311,46 @@ const NewsDetail = () => {
                     <div>
                       <p className="text-sm text-muted-foreground">Yayın Tarihi</p>
                       <p className="font-medium">{formatTimeAgo(newsItem.createdAt)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Okuma Süresi</p>
+                      <p className="font-medium">{getReadTime(newsItem.content)}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Security Tips */}
+                <Card className="card-matrix">
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Shield className="h-5 w-5" />
+                      Güvenlik İpuçları
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-muted-foreground">
+                        Sistemlerinizi güncel tutun
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-muted-foreground">
+                        Güçlü parolalar kullanın
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-muted-foreground">
+                        Şüpheli e-postalara dikkat edin
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-muted-foreground">
+                        Düzenli yedekleme yapın
+                      </p>
                     </div>
                   </CardContent>
                 </Card>

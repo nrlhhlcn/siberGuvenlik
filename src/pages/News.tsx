@@ -10,7 +10,9 @@ import {
   Filter,
   Search,
   Calendar,
-  Loader2
+  Loader2,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { collection, getDocs, query, orderBy, limit, where } from "firebase/firestore";
 import { db } from "@/firebase";
 import { getLatestNews } from "@/services/rssService";
+import { shuffleArray } from "@/lib/utils";
 
 interface NewsItem {
   id: string;
@@ -40,9 +43,14 @@ const News = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [shuffledNews, setShuffledNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const newsCategories = [
     { id: "all", name: "Tüm Haberler", count: 0 },
@@ -61,6 +69,29 @@ const News = () => {
       
       const newsData = await getLatestNews();
       setNews(newsData);
+
+      // Yeni haberleri kontrol et (son 24 saat içindeki haberler)
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const newNews = newsData.filter(item => {
+        const newsDate = new Date(item.createdAt);
+        return newsDate > oneDayAgo;
+      });
+
+      // Yeni haberler varsa onları önce göster, yoksa karıştır
+      if (newNews.length > 0) {
+        console.log(`${newNews.length} yeni haber bulundu (son 24 saat), önce gösteriliyor`);
+        // Yeni haberler + eski haberler (karıştırılmış)
+        const oldNews = newsData.filter(item => !newNews.includes(item));
+        const shuffledOldNews = shuffleArray(oldNews);
+        const finalNews = [...newNews, ...shuffledOldNews].filter(item => item !== undefined);
+        console.log(`Toplam ${finalNews.length} haber: ${newNews.length} yeni + ${shuffledOldNews.length} eski (karışık)`);
+        setShuffledNews(finalNews);
+      } else {
+        console.log('Yeni haber yok, tüm haberler karıştırılıyor');
+        const shuffledAll = shuffleArray(newsData).filter(item => item !== undefined);
+        console.log(`${shuffledAll.length} haber karıştırıldı`);
+        setShuffledNews(shuffledAll);
+      }
       
       // Kategori sayılarını güncelle
       newsCategories.forEach(category => {
@@ -83,12 +114,25 @@ const News = () => {
   const handleManualUpdate = async () => {
     try {
       setUpdating(true);
-      await fetchNews(); // Güncellenmiş haberleri çek
+      await fetchNews(); // Yeni haberleri çek
+      setCurrentPage(1); // İlk sayfaya dön
     } catch (error) {
       console.error('Error updating RSS feeds:', error);
     } finally {
       setUpdating(false);
     }
+  };
+
+  // Kategori değiştiğinde ilk sayfaya dön
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setCurrentPage(1);
+  };
+
+  // Arama değiştiğinde ilk sayfaya dön
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -145,14 +189,43 @@ const News = () => {
     }
   };
 
-  const filteredNews = news.filter(newsItem => {
+  const filteredNews = shuffledNews.filter(newsItem => {
+    // Undefined kontrolü
+    if (!newsItem || !newsItem.title || !newsItem.content) {
+      return false;
+    }
+    
     const matchesSearch = newsItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          newsItem.content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "all" || newsItem.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const breakingNews = news.filter(item => item.severity === "high").slice(0, 3);
+  // Sayfalama hesaplamaları
+  const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentNews = filteredNews.slice(startIndex, endIndex);
+
+  // Sayfa değiştirme fonksiyonları
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const breakingNews = shuffledNews.filter(item => item.severity === "high").slice(0, 3);
 
   if (loading) {
     return (
@@ -280,7 +353,7 @@ const News = () => {
               <Input
                 placeholder="Haberlerde ara..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -309,7 +382,7 @@ const News = () => {
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => handleCategoryChange(category.id)}
                   className={selectedCategory === category.id ? "btn-cyber" : "btn-matrix"}
                 >
                   {category.name} ({category.count})
@@ -320,8 +393,8 @@ const News = () => {
 
           {/* Haber Listesi */}
           <div className="space-y-6">
-            {filteredNews.length > 0 ? (
-              filteredNews.map((newsItem) => (
+            {currentNews.length > 0 ? (
+              currentNews.map((newsItem) => (
                 <Card 
                   key={newsItem.id} 
                   className="card-matrix hover-lift group cursor-pointer"
@@ -394,12 +467,68 @@ const News = () => {
             )}
           </div>
 
-          {/* Yükleme Butonu */}
-          <div className="text-center mt-12">
-            <Button className="btn-cyber">
-              <span>Daha Fazla Haber Yükle</span>
-            </Button>
-          </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex flex-col items-center gap-4 mt-12">
+              {/* Sayfa Bilgisi */}
+              <div className="text-sm text-muted-foreground">
+                Sayfa {currentPage} / {totalPages} - Toplam {filteredNews.length} haber
+              </div>
+              
+              {/* Pagination Butonları */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToPrevPage}
+                  disabled={currentPage === 1}
+                  className="btn-matrix"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Önceki
+                </Button>
+                
+                {/* Sayfa Numaraları */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => goToPage(pageNum)}
+                        className={currentPage === pageNum ? "btn-cyber" : "btn-matrix"}
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                  className="btn-matrix"
+                >
+                  Sonraki
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

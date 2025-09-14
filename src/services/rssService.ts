@@ -4,7 +4,7 @@ import { db } from '@/firebase';
 // CORS Proxy URL'si
 const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
 
-// RSS Feed kaynakları - Güncel Siber Güvenlik Haberleri
+// RSS Feed kaynakları - En Önemli Siber Güvenlik Siteleri (Sadece 5 tane)
 const RSS_FEEDS = [
   {
     name: 'Bleeping Computer Security',
@@ -19,6 +19,12 @@ const RSS_FEEDS = [
     language: 'en'
   },
   {
+    name: 'The Hacker News',
+    url: 'https://feeds.feedburner.com/TheHackersNews',
+    category: 'tools',
+    language: 'en'
+  },
+  {
     name: 'Dark Reading',
     url: 'https://www.darkreading.com/rss.xml',
     category: 'reports',
@@ -28,42 +34,6 @@ const RSS_FEEDS = [
     name: 'Security Week',
     url: 'https://www.securityweek.com/rss',
     category: 'updates',
-    language: 'en'
-  },
-  {
-    name: 'The Hacker News',
-    url: 'https://feeds.feedburner.com/TheHackersNews',
-    category: 'tools',
-    language: 'en'
-  },
-  {
-    name: 'CISA News',
-    url: 'https://www.cisa.gov/news.xml',
-    category: 'updates',
-    language: 'en'
-  },
-  {
-    name: 'NIST Cybersecurity',
-    url: 'https://www.nist.gov/news-events/cybersecurity-news/rss.xml',
-    category: 'education',
-    language: 'en'
-  },
-  {
-    name: 'Threatpost',
-    url: 'https://threatpost.com/feed/',
-    category: 'threats',
-    language: 'en'
-  },
-  {
-    name: 'CSO Online',
-    url: 'https://www.csoonline.com/index.rss',
-    category: 'reports',
-    language: 'en'
-  },
-  {
-    name: 'InfoSec Magazine',
-    url: 'https://www.infosecurity-magazine.com/rss/',
-    category: 'education',
     language: 'en'
   }
 ];
@@ -100,30 +70,40 @@ export const fetchRSSFeeds = async (): Promise<RSSNewsItem[]> => {
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
       
-      // RSS item'larını bul
+      // RSS item'larını bul (maksimum 10 haber per feed)
       const items = xmlDoc.querySelectorAll('item');
+      const maxItemsPerFeed = 10;
       
-      items.forEach((item) => {
+      Array.from(items).slice(0, maxItemsPerFeed).forEach((item) => {
         const title = item.querySelector('title')?.textContent;
         const description = item.querySelector('description')?.textContent;
+        const contentEncoded = item.querySelector('content\\:encoded')?.textContent || 
+                              item.querySelector('encoded')?.textContent;
         const link = item.querySelector('link')?.textContent;
         const pubDate = item.querySelector('pubDate')?.textContent;
         
         if (title && description) {
+          // RSS'den gelen tarihi kullan, yoksa şu anki tarihi kullan
+          const newsDate = pubDate ? new Date(pubDate) : new Date();
+          
+          // Daha detaylı içerik oluştur
+          const fullContent = contentEncoded || description;
+          const enhancedContent = enhanceNewsContent(fullContent, title);
+          
           const newsItem: RSSNewsItem = {
             id: generateNewsId(link || title, title),
             title: title,
-            content: description,
+            content: enhancedContent,
             link: link || '',
             pubDate: pubDate || new Date().toISOString(),
             category: feed.category,
-            authorId: 'rss-bot',
-            authorName: 'RSS Bot',
+            authorId: feed.name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            authorName: feed.name,
             source: feed.name,
             language: feed.language,
-            createdAt: new Date(),
-            severity: determineSeverity(title, description),
-            image: extractImageFromContent(description)
+            createdAt: newsDate, // RSS'den gelen gerçek tarih
+            severity: determineSeverity(title, enhancedContent),
+            image: extractImageFromContent(enhancedContent)
           };
           
           allNews.push(newsItem);
@@ -134,7 +114,8 @@ export const fetchRSSFeeds = async (): Promise<RSSNewsItem[]> => {
     }
   }
 
-  return allNews;
+  // Maksimum 50 haber döndür
+  return allNews.slice(0, 50);
 };
 
 // Haber ID'si oluştur (stabil ID için)
@@ -178,7 +159,32 @@ const extractImageFromContent = (content: string): string => {
   return match ? match[1] : '';
 };
 
-// RSS feed'lerden haberleri çek ve döndür (Firebase'e kaydetmeden)
+// Haber içeriğini zenginleştir
+const enhanceNewsContent = (content: string, title: string): string => {
+  // HTML etiketlerini temizle
+  const cleanContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  
+  // Eğer içerik çok kısaysa, başlık ve genel bilgilerle zenginleştir
+  if (cleanContent.length < 200) {
+    const enhancedContent = `
+${cleanContent}
+
+Bu siber güvenlik haberi, ${title.toLowerCase().includes('attack') ? 'siber saldırı' : 
+title.toLowerCase().includes('vulnerability') ? 'güvenlik açığı' : 
+title.toLowerCase().includes('breach') ? 'veri ihlali' : 'güvenlik tehdidi'} konusunda önemli bilgiler içermektedir.
+
+Siber güvenlik uzmanları, bu tür gelişmeleri yakından takip etmekte ve gerekli önlemleri almaktadır. Kurumsal güvenlik ekipleri, bu haberi değerlendirerek sistemlerini güncel tutmalıdır.
+
+Daha fazla bilgi için kaynak makaleyi inceleyebilirsiniz.
+    `.trim();
+    
+    return enhancedContent;
+  }
+  
+  return cleanContent;
+};
+
+// RSS feed'lerden haberleri çek (cache olmadan)
 export const getLatestNews = async (): Promise<RSSNewsItem[]> => {
   try {
     console.log('Fetching latest news from RSS feeds...');
