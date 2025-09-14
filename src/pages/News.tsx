@@ -1,5 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { 
   Newspaper, 
   Clock, 
@@ -9,64 +8,98 @@ import {
   ExternalLink,
   Filter,
   Search,
-  Calendar,
-  RefreshCw,
-  Loader2
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
-import { fetchNews, fetchBreakingNews, getNewsCounts, NewsItem } from "@/services/firebaseNewsService";
 
 const News = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
-  // Debounced search - 500ms gecikme ile arama
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  // Dinamik haber verilerini çek
-  const { data: newsData, isLoading: newsLoading, refetch: refetchNews } = useQuery({
-    queryKey: ['news', selectedCategory, debouncedSearchTerm],
-    queryFn: () => fetchNews(selectedCategory === 'all' ? undefined : selectedCategory, debouncedSearchTerm || undefined),
-    staleTime: 5 * 60 * 1000, // 5 dakika
-    refetchInterval: 10 * 60 * 1000, // 10 dakikada bir otomatik yenile
-  });
-
-  const allNews = newsData?.news || [];
-
-  // Breaking news'i çek
-  const { data: breakingNews = [], isLoading: breakingLoading } = useQuery({
-    queryKey: ['breaking-news'],
-    queryFn: fetchBreakingNews,
-    staleTime: 2 * 60 * 1000, // 2 dakika
-    refetchInterval: 5 * 60 * 1000, // 5 dakikada bir otomatik yenile
-  });
-
-  // Kategori sayılarını çek
-  const { data: newsCounts = { all: 0, threats: 0, updates: 0, tools: 0, education: 0, reports: 0 } } = useQuery({
-    queryKey: ['news-counts'],
-    queryFn: getNewsCounts,
-    staleTime: 10 * 60 * 1000, // 10 dakika
-  });
 
   const newsCategories = [
-    { id: "all", name: "Tüm Siber Güvenlik Haberleri", count: newsCounts.all },
-    { id: "threats", name: "Siber Tehditler", count: newsCounts.threats },
-    { id: "updates", name: "Güvenlik Güncellemeleri", count: newsCounts.updates },
-    { id: "tools", name: "Güvenlik Araçları", count: newsCounts.tools },
-    { id: "education", name: "Siber Güvenlik Eğitimi", count: newsCounts.education },
-    { id: "reports", name: "Güvenlik Raporları", count: newsCounts.reports }
+    { id: "all", name: "Tüm Haberler", count: 45 },
+    { id: "threats", name: "Tehditler", count: 12 },
+    { id: "updates", name: "Güncellemeler", count: 8 },
+    { id: "tools", name: "Araçlar", count: 7 },
+    { id: "education", name: "Eğitim", count: 6 },
+    { id: "reports", name: "Raporlar", count: 12 }
+  ];
+
+  const breakingNews = [
+    {
+      id: "1",
+      title: "Yeni Ransomware Saldırısı: LockBit 3.0 Tespit Edildi",
+      summary: "Kritik altyapıları hedef alan yeni ransomware türü tespit edildi. Uzmanlar acil güvenlik önlemleri alınmasını tavsiye ediyor.",
+      category: "threats",
+      severity: "high",
+      timeAgo: "15 dakika önce",
+      readTime: "3 dk",
+      source: "CyberGuard Security Lab",
+      image: "🚨"
+    },
+    {
+      id: "2", 
+      title: "Microsoft Kritik Güvenlik Açığını Kapattı",
+      summary: "Windows ve Office ürünlerini etkileyen zero-day açığı için acil güncelleme yayınlandı.",
+      category: "updates",
+      severity: "medium",
+      timeAgo: "2 saat önce", 
+      readTime: "2 dk",
+      source: "Microsoft Security Blog",
+      image: "🔧"
+    },
+    {
+      id: "3",
+      title: "Ücretsiz Güvenlik Tarayıcı Aracı Güncellendi",
+      summary: "Popüler açık kaynak güvenlik tarayıcısına yeni özellikler eklendi. Şimdi daha hızlı ve etkili.",
+      category: "tools",
+      severity: "low",
+      timeAgo: "4 saat önce",
+      readTime: "2 dk", 
+      source: "Open Security Community",
+      image: "🛠️"
+    }
+  ];
+
+  const allNews = [
+    ...breakingNews,
+    {
+      id: "4",
+      title: "Yapay Zeka Destekli Siber Saldırılar Artışta",
+      summary: "2024 yılında AI destekli saldırıların %300 arttığı raporlandı. Uzmanlar savunma stratejilerini gözden geçirmeyi öneriyor.",
+      category: "reports", 
+      severity: "medium",
+      timeAgo: "6 saat önce",
+      readTime: "5 dk",
+      source: "Cybersecurity Research Institute",
+      image: "🤖"
+    },
+    {
+      id: "5",
+      title: "Ücretsiz Siber Güvenlik Eğitim Serisi Başlıyor",
+      summary: "Türkiye'nin en kapsamlı ücretsiz siber güvenlik eğitim programı 1 Mart'ta başlıyor. Kayıtlar açık.",
+      category: "education",
+      severity: "low", 
+      timeAgo: "8 saat önce",
+      readTime: "3 dk",
+      source: "CyberGuard Eğitim",
+      image: "📚"
+    },
+    {
+      id: "6",
+      title: "Phishing Saldırıları %250 Arttı",
+      summary: "Son 3 ayda phishing saldırılarında dramatik artış gözlemlendi. E-posta güvenliği önlemleri kritik hale geldi.",
+      category: "threats",
+      severity: "high",
+      timeAgo: "12 saat önce", 
+      readTime: "4 dk",
+      source: "Anti-Phishing Working Group",
+      image: "🎣"
+    }
   ];
 
   const getSeverityColor = (severity: string) => {
@@ -87,11 +120,12 @@ const News = () => {
     }
   };
 
-  // Arama ve filtreleme artık API seviyesinde yapılıyor
-  const filteredNews = allNews || [];
-  
-  // Debug için
-  console.log('News data:', { allNews, filteredNews, newsLoading });
+  const filteredNews = allNews.filter(news => {
+    const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         news.summary.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || news.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen pt-20">
@@ -123,10 +157,9 @@ const News = () => {
             <span className="text-gradient-cyber">Güvenlik Haberleri</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-fade-in">
-            Siber güvenlik uzmanları için özel olarak seçilmiş son dakika haberleri, tehdit analizleri, 
-            güvenlik açığı raporları ve siber güvenlik araçları güncellemeleri
+            Siber güvenlik dünyasından son dakika haberleri, tehdit analizleri ve güvenlik uyarıları
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 animate-slide-up">
+          <div className="flex items-center justify-center gap-4 animate-slide-up">
             <div className="flex items-center gap-2 text-accent animate-pulse-glow">
               <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
               <span className="text-sm">Canlı Güncelleme</span>
@@ -134,28 +167,6 @@ const News = () => {
             <div className="flex items-center gap-2 text-primary animate-pulse-glow">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
               <span className="text-sm">7/24 İzleme</span>
-            </div>
-            <div className="flex items-center gap-2 text-cyan-400 animate-pulse-glow">
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-              <span className="text-sm">Siber Güvenlik Odaklı</span>
-            </div>
-          </div>
-          
-          {/* Arama Önerileri */}
-          <div className="mt-6 animate-fade-in">
-            <p className="text-sm text-muted-foreground mb-3">Popüler arama terimleri:</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {['ransomware', 'phishing', 'CVE', 'zero-day', 'malware', 'penetrasyon testi', 'güvenlik açığı', 'siber saldırı'].map((term) => (
-                <Button
-                  key={term}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setSearchTerm(term)}
-                  className="text-xs btn-matrix"
-                >
-                  {term}
-                </Button>
-              ))}
             </div>
           </div>
         </div>
@@ -167,20 +178,6 @@ const News = () => {
           <div className="flex items-center space-x-2 mb-6">
             <TrendingUp className="h-6 w-6 text-destructive animate-pulse" />
             <h2 className="text-2xl font-bold text-destructive">Son Dakika</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refetchNews()}
-              disabled={breakingLoading}
-              className="btn-matrix"
-            >
-              {breakingLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : (
-                <RefreshCw className="h-4 w-4 mr-2" />
-              )}
-              Yenile
-            </Button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -223,15 +220,10 @@ const News = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Siber güvenlik haberlerinde ara... (örn: ransomware, phishing, CVE)"
+                placeholder="Haberlerde ara..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    // Arama otomatik olarak React Query ile yapılıyor
-                  }
-                }}
               />
             </div>
             <div className="flex space-x-2">
@@ -250,17 +242,9 @@ const News = () => {
           </div>
 
           {/* Haber Listesi */}
-          {newsLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-accent" />
-                <p className="text-muted-foreground">Haberler yükleniyor...</p>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {filteredNews.map((news) => (
-              <Card key={news.id} className="card-matrix hover-lift group cursor-pointer" onClick={() => window.location.href = `/news/${news.id}`}>
+          <div className="space-y-6">
+            {filteredNews.map((news) => (
+              <Card key={news.id} className="card-matrix hover-lift group">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
                     <div className="text-3xl flex-shrink-0">{news.image}</div>
@@ -291,15 +275,7 @@ const News = () => {
                           <span className="text-accent">{news.source}</span>
                         </div>
                         
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="btn-matrix"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.location.href = `/news/${news.id}`;
-                          }}
-                        >
+                        <Button variant="outline" size="sm" className="btn-matrix">
                           <span>Devamını Oku</span>
                           <ExternalLink className="ml-2 h-3 w-3" />
                         </Button>
@@ -309,8 +285,7 @@ const News = () => {
                 </CardContent>
               </Card>
             ))}
-            </div>
-          )}
+          </div>
 
           {/* Yükleme Butonu */}
           <div className="text-center mt-12">
