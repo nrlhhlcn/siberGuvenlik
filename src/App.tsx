@@ -13,6 +13,9 @@ import News from "./pages/News";
 import Quiz from "./pages/Quiz";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
+import NewsDetail from "./pages/NewsDetail";
+import AdminPanel from "./components/AdminPanel";
+import RSSNewsTest from "./pages/RSSNewsTest";
 import NotFound from "./pages/NotFound";
 import { ScrollToTop } from "./components/ScrollToTop";
 
@@ -35,9 +38,12 @@ const App = () => {
                   <Route path="/tools" element={<Tools />} />
                   <Route path="/training" element={<Training />} />
                   <Route path="/news" element={<News />} />
+                  <Route path="/news/:id" element={<NewsDetail />} />
                   <Route path="/quiz" element={<Quiz />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/faq" element={<FAQ />} />
+                  <Route path="/admin" element={<AdminPanel />} />
+                  <Route path="/rss-test" element={<RSSNewsTest />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

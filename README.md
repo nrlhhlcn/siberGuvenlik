@@ -1,73 +1,206 @@
-# Welcome to your Lovable project
+# 🛡️ Siber Güvenlik Platformu
 
-## Project info
+Modern ve kapsamlı bir siber güvenlik eğitim ve bilgilendirme platformu. React, TypeScript ve Firebase ile geliştirilmiştir.
 
-**URL**: https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f
+## 🚀 Özellikler
 
-## How can I edit this code?
+### 📰 Dinamik Haber Sistemi
+- **RSS Entegrasyonu**: 15+ siber güvenlik RSS kaynağından otomatik haber çekme
+- **Firebase Veritabanı**: Haberleri saklama ve yönetme
+- **Akıllı Kategorilendirme**: Tehditler, güvenlik açıkları, eğitim, araçlar
+- **Arama ve Filtreleme**: Gelişmiş arama ve kategori filtreleme
+- **Son Dakika Haberleri**: Kritik güvenlik uyarıları
+- **Detaylı İçerik**: Her haber için genişletilmiş açıklamalar ve öneriler
 
-There are several ways of editing your application.
+### 🎓 Eğitim Modülleri
+- **Siber Güvenlik Temelleri**: Temel kavramlar ve prensipler
+- **Tehdit Analizi**: Ransomware, phishing, malware analizi
+- **Güvenlik Araçları**: Pratik araç kullanımı
+- **Sertifika Sistemi**: Eğitim tamamlama sertifikaları
 
-**Use Lovable**
+### 🧪 Etkileşimli Araçlar
+- **Güvenlik Testleri**: Sistem güvenlik değerlendirmesi
+- **Vulnerability Scanner**: Güvenlik açığı tarama
+- **Password Generator**: Güçlü şifre oluşturma
+- **Network Analyzer**: Ağ güvenlik analizi
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f) and start prompting.
+### 📊 Quiz ve Değerlendirme
+- **Dinamik Quiz Sistemi**: Otomatik soru oluşturma
+- **Seviye Bazlı Testler**: Başlangıç, orta, ileri seviye
+- **Anlık Geri Bildirim**: Detaylı açıklamalar ve öneriler
+- **İlerleme Takibi**: Kullanıcı gelişim raporları
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🔧 Yönetim Paneli
+- **Admin Dashboard**: Haber ve içerik yönetimi
+- **RSS Senkronizasyonu**: Otomatik haber güncelleme
+- **Kullanıcı Yönetimi**: Kullanıcı rolleri ve yetkiler
+- **Analitik Raporlar**: Platform kullanım istatistikleri
 
-**Use your preferred IDE**
+## 🛠️ Teknolojiler
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- **React 18** - Modern UI framework
+- **TypeScript** - Tip güvenliği
+- **Vite** - Hızlı build tool
+- **React Router** - Sayfa yönlendirme
+- **React Query** - Veri yönetimi ve cache
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### UI/UX
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern UI bileşenleri
+- **Radix UI** - Erişilebilir UI primitives
+- **Lucide React** - İkon kütüphanesi
+- **Framer Motion** - Animasyonlar
 
-Follow these steps:
+### Backend & Veritabanı
+- **Firebase Firestore** - NoSQL veritabanı
+- **Firebase Authentication** - Kullanıcı kimlik doğrulama
+- **Firebase Storage** - Dosya depolama
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Harici Servisler
+- **RSS Feeds** - 15+ siber güvenlik kaynağı
+- **CORS Proxy** - Cross-origin istekler
+- **NewsAPI** - Haber API entegrasyonu
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 📦 Kurulum
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Gereksinimler
+- Node.js 18+ 
+- npm veya yarn
+- Firebase projesi
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Adımlar
+
+```bash
+# 1. Projeyi klonlayın
+git clone <repository-url>
+cd siberGuvenlik
+
+# 2. Bağımlılıkları yükleyin
+npm install
+
+# 3. Environment değişkenlerini ayarlayın
+cp .env.example .env
+# .env dosyasını düzenleyin ve Firebase ayarlarınızı ekleyin
+
+# 4. Geliştirme sunucusunu başlatın
 npm run dev
+
+# 5. Tarayıcıda açın
+# http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+### Environment Değişkenleri
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+`.env` dosyasında aşağıdaki değişkenleri ayarlayın:
 
-**Use GitHub Codespaces**
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🚀 Deployment
 
-## What technologies are used for this project?
+### Vercel (Önerilen)
+```bash
+# Vercel CLI ile
+npm i -g vercel
+vercel
 
-This project is built with:
+# Veya GitHub entegrasyonu ile
+# GitHub repository'sini Vercel'e bağlayın
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Netlify
+```bash
+# Netlify CLI ile
+npm i -g netlify-cli
+netlify deploy --prod --dir=dist
+```
 
-## How can I deploy this project?
+### Firebase Hosting
+```bash
+# Firebase CLI ile
+npm i -g firebase-tools
+firebase login
+firebase init hosting
+npm run build
+firebase deploy
+```
 
-Simply open [Lovable](https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f) and click on Share -> Publish.
+## 📁 Proje Yapısı
 
-## Can I connect a custom domain to my Lovable project?
+```
+src/
+├── components/          # Yeniden kullanılabilir bileşenler
+│   ├── ui/             # shadcn/ui bileşenleri
+│   ├── Header.tsx      # Ana başlık
+│   ├── Footer.tsx      # Alt bilgi
+│   └── AdminPanel.tsx  # Yönetim paneli
+├── pages/              # Sayfa bileşenleri
+│   ├── Home.tsx        # Ana sayfa
+│   ├── News.tsx        # Haberler
+│   ├── NewsDetail.tsx  # Haber detayı
+│   ├── Training.tsx    # Eğitim
+│   ├── Quiz.tsx        # Quiz
+│   └── Tools.tsx       # Araçlar
+├── services/           # API servisleri
+│   ├── firebaseNewsService.ts  # Firebase haber servisi
+│   ├── rssService.ts           # RSS servisi
+│   └── newsService.ts          # Haber servisi
+├── lib/                # Yardımcı kütüphaneler
+│   ├── firebase.ts     # Firebase yapılandırması
+│   └── utils.ts        # Yardımcı fonksiyonlar
+└── hooks/              # Custom React hooks
+```
 
-Yes, you can!
+## 🔧 Geliştirme
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Mevcut Komutlar
+```bash
+npm run dev          # Geliştirme sunucusu
+npm run build        # Production build
+npm run preview      # Build önizleme
+npm run lint         # ESLint kontrolü
+npm run type-check   # TypeScript kontrolü
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Yeni Özellik Ekleme
+1. `src/pages/` altında yeni sayfa oluşturun
+2. `src/components/` altında bileşen ekleyin
+3. `src/services/` altında API servisi yazın
+4. `App.tsx`'de route ekleyin
+
+## 🤝 Katkıda Bulunma
+
+1. Fork yapın
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit yapın (`git commit -m 'Add amazing feature'`)
+4. Push yapın (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakın.
+
+## 📞 İletişim
+
+- **Proje Sahibi**: [Adınız]
+- **Email**: [email@example.com]
+- **GitHub**: [github.com/username]
+
+## 🙏 Teşekkürler
+
+- [React](https://reactjs.org/) - UI framework
+- [Firebase](https://firebase.google.com/) - Backend servisleri
+- [shadcn/ui](https://ui.shadcn.com/) - UI bileşenleri
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
+- [Lucide](https://lucide.dev/) - İkon kütüphanesi
+
+---
+
+⭐ **Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
