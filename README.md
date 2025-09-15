@@ -1,73 +1,169 @@
-# Welcome to your Lovable project
+#️ Siber Güvenlik Eğitim Platformu
 
-## Project info
+> Modern ve kapsamlı siber güvenlik eğitimi, güncel haberler ve pratik araçlar sunan interaktif platform.
 
-**URL**: https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f
+[![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-9.0-orange?logo=firebase)](https://firebase.google.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-## How can I edit this code?
+## 🎯 Proje Amacı
 
-There are several ways of editing your application.
+Bu platform, siber güvenlik alanında **farkındalık yaratmak** ve **kapsamlı eğitim sunmak** amacıyla geliştirilmiştir. Güncel tehditler, güvenlik açıkları ve korunma yöntemleri hakkında bilgi sağlayarak kullanıcıların siber güvenlik bilgilerini artırmayı hedefler.
 
-**Use Lovable**
+## �� Hedef Kitle
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f) and start prompting.
+- ** Siber Güvenlik Uzmanları** - Güncel tehditleri takip etmek için
+- ** BT Profesyonelleri** - Güvenlik bilgilerini güncellemek için  
+- ** Öğrenciler** - Siber güvenlik öğrenmek için
+- ** Eğitimciler** - Eğitim materyali olarak kullanmak için
+- ** Genel Kullanıcılar** - Kişisel güvenlik farkındalığı için
 
-Changes made via Lovable will be committed automatically to this repo.
+## ✨ Özellikler
 
-**Use your preferred IDE**
+### 📰 **Dinamik Haber Sistemi**
+- 15+ siber güvenlik RSS kaynağından otomatik haber çekme
+- Kategori bazlı filtreleme (Tehditler, Güvenlik Açıkları, Eğitim)
+- Gelişmiş arama ve son dakika haberleri
+- Her haber için detaylı analiz ve öneriler
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🎓 **Etkileşimli Eğitim Modülleri**
+- Siber güvenlik temelleri ve ileri seviye konular
+- Ransomware, phishing, malware analizi
+- Pratik güvenlik araçları kullanımı
+- Sertifika sistemi ve ilerleme takibi
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### **Pratik Güvenlik Araçları**
+- Güvenlik açığı tarama
+- Güçlü şifre oluşturma
+- Ağ güvenlik analizi
+- Sistem güvenlik değerlendirmesi
 
-Follow these steps:
+### **Quiz ve Değerlendirme**
+- Dinamik soru oluşturma sistemi
+- Seviye bazlı testler (Başlangıç, Orta, İleri)
+- Anlık geri bildirim ve detaylı açıklamalar
+- Kullanıcı gelişim raporları
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🔐 **Güvenlik ve Erişim Kontrolü**
+- Firebase Authentication ile güvenli giriş
+- Blur efekti ile içerik koruması
+- Kullanıcı rolleri ve yetkilendirme
+- Giriş yapmadan içerik önizleme
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Teknolojiler
 
-# Step 3: Install the necessary dependencies.
-npm i
+### **Frontend**
+- **React 18** - Modern UI framework
+- **TypeScript** - Tip güvenliği ve geliştirici deneyimi
+- **Vite** - Hızlı build tool ve geliştirme sunucusu
+- **React Router** - Sayfa yönlendirme
+- **React Query** - Veri yönetimi ve cache
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### **UI/UX**
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern ve erişilebilir UI bileşenleri
+- **Radix UI** - Erişilebilir UI primitives
+- **Lucide React** - Tutarlı ikon kütüphanesi
+
+### **Backend & Veritabanı**
+- **Firebase Firestore** - NoSQL veritabanı
+- **Firebase Authentication** - Kullanıcı kimlik doğrulama
+- **Firebase Storage** - Dosya depolama
+
+### **Harici Servisler**
+- **RSS Feeds** - 15+ siber güvenlik kaynağı
+- **CORS Proxy** - Cross-origin istekler
+- **NewsAPI** - Haber API entegrasyonu
+
+## 🚀 Hızlı Başlangıç
+
+### **Gereksinimler**
+- Node.js 18+ 
+- npm veya yarn
+- Firebase projesi
+
+### **Kurulum**
+
+```bash
+# 1. Projeyi klonlayın
+git clone https://github.com/username/siberGuvenlik.git
+cd siberGuvenlik
+
+# 2. Bağımlılıkları yükleyin
+npm install
+
+# 3. Environment değişkenlerini ayarlayın
+cp .env.example .env
+# .env dosyasını düzenleyin ve Firebase ayarlarınızı ekleyin
+
+# 4. Geliştirme sunucusunu başlatın
 npm run dev
+
+# 5. Tarayıcıda açın
+# http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+### **Environment Değişkenleri**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+`.env` dosyasında aşağıdaki değişkenleri ayarlayın:
 
-**Use GitHub Codespaces**
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📖 Kullanım
 
-## What technologies are used for this project?
+### **Haberler Sayfası**
+- Güncel siber güvenlik haberlerini görüntüleyin
+- Kategori bazlı filtreleme yapın
+- Arama ile spesifik konuları bulun
+- Haber detaylarını okuyun
 
-This project is built with:
+### **Eğitim Modülleri**
+- Siber güvenlik konularını öğrenin
+- Pratik araçları kullanın
+- İlerlemenizi takip edin
+- Sertifika kazanın
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### **Quiz Sistemi**
+- Bilginizi test edin
+- Farklı seviyelerde sorular çözün
+- Detaylı geri bildirim alın
+- Gelişiminizi izleyin
 
-## How can I deploy this project?
+### **Güvenlik Araçları**
+- IP sorgulama ve analiz
+- Şifre güvenlik kontrolü
+- Hash hesaplama ve doğrulama
+- Ağ güvenlik taraması
 
-Simply open [Lovable](https://lovable.dev/projects/a9cde9e8-e2d0-4857-9410-1d04ac64835f) and click on Share -> Publish.
+## 🚀 Deployment
 
-## Can I connect a custom domain to my Lovable project?
+### **Vercel (Önerilen)**
+```bash
+npm i -g vercel
+vercel
+```
 
-Yes, you can!
+### **Netlify**
+```bash
+npm i -g netlify-cli
+netlify deploy --prod --dir=dist
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### **Firebase Hosting**
+```bash
+npm i -g firebase-tools
+firebase login
+firebase init hosting
+npm run build
+firebase deploy
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 📁 Proje Yapısı
