@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Shield, Menu, X, LogIn, LogOut, User as UserIcon } from "lucide-react";
+import { Moon, Sun, Shield, Menu, X, LogIn, LogOut, User as UserIcon, Lock } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
