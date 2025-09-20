@@ -11,11 +11,11 @@ const Footer = () => {
             <div className="flex items-center space-x-2">
               <Shield className="h-6 w-6 text-primary" />
               <span className="text-lg font-bold text-gradient-cyber">
-                CyberGuard
+                Shield
               </span>
             </div>
             <p className="text-muted-foreground text-sm">
-              Siber güvenlik dünyasında güncel bilgiler, araçlar ve eğitimlerle 
+              Güvenlik dünyasında güncel bilgiler, araçlar ve eğitimlerle 
               dijital güvenliğinizi artırın.
             </p>
             <div className="flex space-x-4">
@@ -92,7 +92,7 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-foreground mb-4">İletişim</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>E-posta: info@cyberguard.com</p>
+              <p>E-posta: info@shield.com</p>
               <p>Telefon: +90 (212) 555-0123</p>
               <p>Adres: İstanbul, Türkiye</p>
             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © 2024 CyberGuard. Tüm hakları saklıdır. | 
+            © 2024 Shield. Tüm hakları saklıdır. | 
             <Link to="#" className="hover:text-accent transition-colors ml-2">
               Gizlilik Politikası
             </Link> | 

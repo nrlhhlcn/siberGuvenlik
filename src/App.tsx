@@ -10,6 +10,8 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Tools from "./pages/Tools";
 import Training from "./pages/Training";
+import CourseDetail from "./pages/CourseDetail";
+import CourseOverview from "./pages/CourseOverview";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
 import Quiz from "./pages/Quiz";
@@ -100,6 +102,21 @@ const AppContent = () => {
           <Route path="/training" element={
             <BlurOverlay>
               <Training />
+            </BlurOverlay>
+          } />
+          <Route path="/course/:courseId" element={
+            <BlurOverlay>
+              <CourseDetail />
+            </BlurOverlay>
+          } />
+          <Route path="/course/:courseId/overview" element={
+            <BlurOverlay>
+              <CourseOverview />
+            </BlurOverlay>
+          } />
+          <Route path="/course/:courseId/module/:moduleIndex/lesson/:lessonIndex" element={
+            <BlurOverlay>
+              <CourseDetail />
             </BlurOverlay>
           } />
           <Route path="/news" element={

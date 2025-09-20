@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   BookOpen, 
   PlayCircle, 
@@ -17,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 
 const Training = () => {
+  const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState<string[]>([]);
 
   const courses = [
@@ -102,6 +104,8 @@ const Training = () => {
     if (!enrolledCourses.includes(courseId)) {
       setEnrolledCourses([...enrolledCourses, courseId]);
     }
+    // Kurs detay sayfasına yönlendir
+    navigate(`/course/${courseId}`);
   };
 
   const getLevelColor = (level: string) => {
@@ -227,7 +231,7 @@ const Training = () => {
                             </>
                           ) : (
                             <>
-                              <span>Kursa Katıl</span>
+                              <span>Kursa Başla</span>
                               <ChevronRight className="ml-2 h-4 w-4" />
                             </>
                           )}

@@ -99,9 +99,9 @@ const Home = () => {
          <div className="relative z-10 container mx-auto px-4 text-center">
            <div className="max-w-4xl mx-auto space-y-8">
              <h1 className="text-6xl md:text-8xl font-bold">
-               <span className="text-gradient-cyber animate-slide-down">Siber</span>
+               <span className="text-gradient-cyber animate-slide-down">Shield</span>
                <br />
-               <span className="text-gradient-matrix animate-slide-up">Güvenlik</span>
+               <span className="text-gradient-matrix animate-slide-up">Platform</span>
              </h1>
              
              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto animate-fade-in">
@@ -152,7 +152,7 @@ const Home = () => {
          <div className="container mx-auto px-4">
            <div className="text-center mb-16">
              <h2 className="text-4xl font-bold text-gradient-cyber mb-4">
-               Kapsamlı Siber Güvenlik Platformu
+               Kapsamlı Güvenlik Platformu
              </h2>
              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                Modern araçlar, uzman eğitimler ve güncel haberlerle 
@@ -234,9 +234,9 @@ const Home = () => {
       <section className="py-20 bg-gradient-cyber text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold">
-              Siber Güvenlik Yolculuğunuza Bugün Başlayın
-            </h2>
+             <h2 className="text-4xl font-bold">
+               Güvenlik Yolculuğunuza Bugün Başlayın
+             </h2>
             <p className="text-xl opacity-90">
               Araçlar, eğitimler ve kaynaklarla 
               dijital güvenliğinizi bir sonraki seviyeye taşıyın. Hiçbir ücret yok!

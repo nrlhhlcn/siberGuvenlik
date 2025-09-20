@@ -1,6 +1,6 @@
-#️ Siber Güvenlik Eğitim Platformu
+#️ Shield - Güvenlik Eğitim Platformu
 
-> Modern ve kapsamlı siber güvenlik eğitimi, güncel haberler ve pratik araçlar sunan interaktif platform.
+> Modern ve kapsamlı güvenlik eğitimi, güncel haberler ve pratik araçlar sunan interaktif platform.
 
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
@@ -9,26 +9,26 @@
 
 ## 🎯 Proje Amacı
 
-Bu platform, siber güvenlik alanında **farkındalık yaratmak** ve **kapsamlı eğitim sunmak** amacıyla geliştirilmiştir. Güncel tehditler, güvenlik açıkları ve korunma yöntemleri hakkında bilgi sağlayarak kullanıcıların siber güvenlik bilgilerini artırmayı hedefler.
+Bu platform, güvenlik alanında **farkındalık yaratmak** ve **kapsamlı eğitim sunmak** amacıyla geliştirilmiştir. Güncel tehditler, güvenlik açıkları ve korunma yöntemleri hakkında bilgi sağlayarak kullanıcıların güvenlik bilgilerini artırmayı hedefler.
 
 ## �� Hedef Kitle
 
-- ** Siber Güvenlik Uzmanları** - Güncel tehditleri takip etmek için
+- ** Güvenlik Uzmanları** - Güncel tehditleri takip etmek için
 - ** BT Profesyonelleri** - Güvenlik bilgilerini güncellemek için  
-- ** Öğrenciler** - Siber güvenlik öğrenmek için
+- ** Öğrenciler** - Güvenlik öğrenmek için
 - ** Eğitimciler** - Eğitim materyali olarak kullanmak için
 - ** Genel Kullanıcılar** - Kişisel güvenlik farkındalığı için
 
 ## ✨ Özellikler
 
 ### 📰 **Dinamik Haber Sistemi**
-- 15+ siber güvenlik RSS kaynağından otomatik haber çekme
+- 15+ güvenlik RSS kaynağından otomatik haber çekme
 - Kategori bazlı filtreleme (Tehditler, Güvenlik Açıkları, Eğitim)
 - Gelişmiş arama ve son dakika haberleri
 - Her haber için detaylı analiz ve öneriler
 
 ### 🎓 **Etkileşimli Eğitim Modülleri**
-- Siber güvenlik temelleri ve ileri seviye konular
+- Güvenlik temelleri ve ileri seviye konular
 - Ransomware, phishing, malware analizi
 - Pratik güvenlik araçları kullanımı
 - Sertifika sistemi ve ilerleme takibi
@@ -72,7 +72,7 @@ Bu platform, siber güvenlik alanında **farkındalık yaratmak** ve **kapsamlı
 - **Firebase Storage** - Dosya depolama
 
 ### **Harici Servisler**
-- **RSS Feeds** - 15+ siber güvenlik kaynağı
+- **RSS Feeds** - 15+ güvenlik kaynağı
 - **CORS Proxy** - Cross-origin istekler
 - **NewsAPI** - Haber API entegrasyonu
 
@@ -120,13 +120,13 @@ VITE_FIREBASE_APP_ID=your_app_id
 ## 📖 Kullanım
 
 ### **Haberler Sayfası**
-- Güncel siber güvenlik haberlerini görüntüleyin
+- Güncel güvenlik haberlerini görüntüleyin
 - Kategori bazlı filtreleme yapın
 - Arama ile spesifik konuları bulun
 - Haber detaylarını okuyun
 
 ### **Eğitim Modülleri**
-- Siber güvenlik konularını öğrenin
+- Güvenlik konularını öğrenin
 - Pratik araçları kullanın
 - İlerlemenizi takip edin
 - Sertifika kazanın

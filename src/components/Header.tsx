@@ -54,7 +54,7 @@ const Header = () => {
               <div className="absolute -inset-1 bg-gradient-cyber rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-sm" />
             </div>
             <span className="text-xl font-bold text-gradient-cyber">
-              CyberGuard
+              Shield
             </span>
           </Link>
 
